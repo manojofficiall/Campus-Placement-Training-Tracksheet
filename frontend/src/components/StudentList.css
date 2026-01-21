@@ -1,0 +1,156 @@
+.student-list-container {
+  margin-top: 20px;
+  padding: 25px;
+  background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+  padding: 20px 0;
+}
+
+.student-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.student-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.card-header h3 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.status-badge {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-placed {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.status-pending {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.status-not-placed {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: #333;
+}
+
+.card-body {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.info-row.notes {
+  flex-direction: column;
+  border-bottom: none;
+}
+
+.info-row.notes .value {
+  margin-top: 5px;
+  color: #666;
+  font-style: italic;
+}
+
+.label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+  font-size: 0.95rem;
+}
+
+.value {
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+  font-size: 0.95rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.card-actions .btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  background: white;
+  border-radius: 12px;
+  padding: 60px 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  color: #666;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .student-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .label {
+    min-width: 100px;
+    font-size: 0.9rem;
+  }
+
+  .value {
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+
+
