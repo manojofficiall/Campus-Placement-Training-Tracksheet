@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-// ...existing code...
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Layout from './components/Layout';
 import Overview from './components/Overview';
 import CreatePage from './components/CreatePage';
 import StudentsPage from './components/StudentsPage';
-import CompaniesPage from './components/CompaniesPage';
+import CompaniesPage from './components/CompanyPage';
+import Analytics from './components/Analytics';
+import About from './components/About';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,6 +69,8 @@ function App() {
                   <Route path="/create" element={<CreatePage />} />
                   <Route path="/students" element={<StudentsPage />} />
                   <Route path="/companies" element={<CompaniesPage />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/about" element={<About />} />
                   <Route path="/" element={<Navigate to="/overview" replace />} />
                 </Routes>
               </Layout>

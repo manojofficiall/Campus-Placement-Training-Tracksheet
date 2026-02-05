@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
 import './Login.css';
-import logo from '../assets/logo.png';
 
 const Login = ({ onLogin }) => {
   // Dark mode state
@@ -94,8 +92,11 @@ const Login = ({ onLogin }) => {
             {darkMode ? '🌙' : '☀️'}
           </button>
           <div className="login-header">
-            <h1 style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.1em'}}>Login <img src={process.env.PUBLIC_URL + '/Manoj.png'} alt="Logo" style={{width: '56px', height: '56px', borderRadius: '50%', objectFit: 'contain', verticalAlign: 'middle'}} /></h1>
-
+            <div className="login-logo">
+              <img src="/Manoj.png" alt="Placement Tracksheet Logo" />
+            </div>
+            <h1>Placement Tracksheet</h1>
+            <p>Campus Placement Management System</p>
           </div>
 
           <form onSubmit={handleSubmit} className="login-form">

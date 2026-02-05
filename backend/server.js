@@ -149,6 +149,9 @@ app.post('/api/students', async (req, res) => {
 // Update a student
 app.put('/api/students/:id', async (req, res) => {
   try {
+    // Get the old student data to compare status changes
+    const oldStudent = await Student.findById(req.params.id);
+    
     const student = await Student.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -157,6 +160,7 @@ app.put('/api/students/:id', async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
+
     res.json(student);
   } catch (error) {
     if (error.code === 11000) {

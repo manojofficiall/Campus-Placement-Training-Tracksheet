@@ -10,13 +10,20 @@ const API_URL = 'http://localhost:5000/api/students';
 const StudentsPage = () => {
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const [editingStudent, setEditingStudent] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   useEffect(() => {
     fetchStudents();
   }, []);
+
+  useEffect(() => {
+    filterStudents();
+  }, [students, searchTerm, statusFilter]);
 
   const fetchStudents = async () => {
     try {
@@ -27,6 +34,27 @@ const StudentsPage = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterStudents = () => {
+    let filtered = students;
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter(student =>
+        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (student.company && student.company.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== 'All') {
+      filtered = filtered.filter(student => student.placementStatus === statusFilter);
+    }
+
+    setFilteredStudents(filtered);
   };
 
   const handleAddStudent = async (studentData) => {
@@ -87,14 +115,59 @@ const StudentsPage = () => {
 
         {!showForm ? (
           <>
-            <button 
-              className="btn btn-primary add-btn" 
-              onClick={() => setShowForm(true)}
-            >
-              + Add New Student
-            </button>
+            <div className="controls-section">
+              <button 
+                className="btn btn-primary add-btn" 
+                onClick={() => setShowForm(true)}
+              >
+                + Add New Student
+              </button>
+              
+              <div className="search-filter-container">
+                <div className="search-box">
+                  <input
+                    type="text"
+                    placeholder="🔍 Search by name, ID, email, or company..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
+                
+                <div className="filter-box">
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="status-filter"
+                  >
+                    <option value="All">All Status</option>
+                    <option value="Placed">Placed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Not Placed">Not Placed</option>
+                  </select>
+                </div>
+              </div>
+              
+              {(searchTerm || statusFilter !== 'All') && (
+                <div className="filter-info">
+                  Showing {filteredStudents.length} of {students.length} students
+                  {searchTerm && <span> • Search: "{searchTerm}"</span>}
+                  {statusFilter !== 'All' && <span> • Status: {statusFilter}</span>}
+                  <button 
+                    className="btn-clear-filters"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setStatusFilter('All');
+                    }}
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              )}
+            </div>
+            
             <StudentList 
-              students={students}
+              students={filteredStudents}
               onEdit={handleEditStudent}
               onDelete={handleDeleteStudent}
             />
