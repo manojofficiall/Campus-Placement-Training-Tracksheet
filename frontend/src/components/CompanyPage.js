@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import CompanyList from './CompanyList';
 import CompanyForm from './CompanyForm';
 import axios from 'axios';
@@ -8,15 +7,10 @@ import '../App.css';
 const API_URL = 'http://localhost:5000/api/companies';
 
 const CompaniesPage = () => {
-  const navigate = useNavigate();
   const [companies, setCompanies] = useState([]);
   const [editingCompany, setEditingCompany] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchCompanies();
-  }, []);
 
   const fetchCompanies = async () => {
     try {
@@ -29,14 +23,22 @@ const CompaniesPage = () => {
     }
   };
 
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
+
   const handleAddCompany = async (companyData) => {
     try {
       if (editingCompany) {
-        await axios.put(`${API_URL}/${editingCompany._id}`, companyData);
+        await axios.put(
+          `${API_URL}/${editingCompany._id}`,
+          companyData
+        );
       } else {
         await axios.post(API_URL, companyData);
       }
-      fetchCompanies();
+
+      await fetchCompanies();
       setShowForm(false);
       setEditingCompany(null);
     } catch (error) {
@@ -53,7 +55,7 @@ const CompaniesPage = () => {
   const handleDeleteCompany = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
-      fetchCompanies();
+      await fetchCompanies();
     } catch (error) {
       console.error('Error deleting company:', error);
       alert('Error deleting company. Please try again.');
@@ -69,7 +71,13 @@ const CompaniesPage = () => {
     return (
       <div className="App">
         <div className="container">
-          <div style={{ textAlign: 'center', color: 'white', padding: '50px' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              color: 'white',
+              padding: '50px'
+            }}
+          >
             Loading companies...
           </div>
         </div>
@@ -87,20 +95,21 @@ const CompaniesPage = () => {
 
         {!showForm ? (
           <>
-            <button 
-              className="btn btn-primary add-btn" 
+            <button
+              className="btn btn-primary add-btn"
               onClick={() => setShowForm(true)}
             >
               + Add New Company
             </button>
-            <CompanyList 
+
+            <CompanyList
               companies={companies}
               onEdit={handleEditCompany}
               onDelete={handleDeleteCompany}
             />
           </>
         ) : (
-          <CompanyForm 
+          <CompanyForm
             company={editingCompany}
             onSubmit={handleAddCompany}
             onCancel={handleCancel}
@@ -112,8 +121,3 @@ const CompaniesPage = () => {
 };
 
 export default CompaniesPage;
-
-
-
-
-
