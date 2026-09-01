@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
 import StudentList from './StudentList';
 import StudentForm from './StudentForm';
 import axios from 'axios';
@@ -8,7 +7,6 @@ import '../App.css';
 const API_URL = 'http://localhost:5000/api/students';
 
 const StudentsPage = () => {
-  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [editingStudent, setEditingStudent] = useState(null);
@@ -16,14 +14,6 @@ const StudentsPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  useEffect(() => {
-    filterStudents();
-  }, [students, searchTerm, statusFilter]);
 
   const fetchStudents = async () => {
     try {
@@ -36,35 +26,49 @@ const StudentsPage = () => {
     }
   };
 
-  const filterStudents = () => {
+  const filterStudents = useCallback(() => {
     let filtered = students;
 
-    // Apply search filter
     if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+
       filtered = filtered.filter(student =>
-        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (student.company && student.company.toLowerCase().includes(searchTerm.toLowerCase()))
+        (student.name || '').toLowerCase().includes(search) ||
+        (student.studentId || '').toLowerCase().includes(search) ||
+        (student.email || '').toLowerCase().includes(search) ||
+        (student.company || '').toLowerCase().includes(search)
       );
     }
 
-    // Apply status filter
     if (statusFilter !== 'All') {
-      filtered = filtered.filter(student => student.placementStatus === statusFilter);
+      filtered = filtered.filter(
+        student => student.placementStatus === statusFilter
+      );
     }
 
     setFilteredStudents(filtered);
-  };
+  }, [students, searchTerm, statusFilter]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    filterStudents();
+  }, [filterStudents]);
 
   const handleAddStudent = async (studentData) => {
     try {
       if (editingStudent) {
-        await axios.put(`${API_URL}/${editingStudent._id}`, studentData);
+        await axios.put(
+          `${API_URL}/${editingStudent._id}`,
+          studentData
+        );
       } else {
         await axios.post(API_URL, studentData);
       }
-      fetchStudents();
+
+      await fetchStudents();
       setShowForm(false);
       setEditingStudent(null);
     } catch (error) {
@@ -81,7 +85,7 @@ const StudentsPage = () => {
   const handleDeleteStudent = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
-      fetchStudents();
+      await fetchStudents();
     } catch (error) {
       console.error('Error deleting student:', error);
       alert('Error deleting student. Please try again.');
@@ -97,7 +101,13 @@ const StudentsPage = () => {
     return (
       <div className="App">
         <div className="container">
-          <div style={{ textAlign: 'center', color: 'white', padding: '50px' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              color: 'white',
+              padding: '50px'
+            }}
+          >
             Loading students...
           </div>
         </div>
@@ -116,13 +126,13 @@ const StudentsPage = () => {
         {!showForm ? (
           <>
             <div className="controls-section">
-              <button 
-                className="btn btn-primary add-btn" 
+              <button
+                className="btn btn-primary add-btn"
                 onClick={() => setShowForm(true)}
               >
                 + Add New Student
               </button>
-              
+
               <div className="search-filter-container">
                 <div className="search-box">
                   <input
@@ -133,7 +143,7 @@ const StudentsPage = () => {
                     className="search-input"
                   />
                 </div>
-                
+
                 <div className="filter-box">
                   <select
                     value={statusFilter}
@@ -147,13 +157,20 @@ const StudentsPage = () => {
                   </select>
                 </div>
               </div>
-              
+
               {(searchTerm || statusFilter !== 'All') && (
                 <div className="filter-info">
                   Showing {filteredStudents.length} of {students.length} students
-                  {searchTerm && <span> • Search: "{searchTerm}"</span>}
-                  {statusFilter !== 'All' && <span> • Status: {statusFilter}</span>}
-                  <button 
+
+                  {searchTerm && (
+                    <span> • Search: "{searchTerm}"</span>
+                  )}
+
+                  {statusFilter !== 'All' && (
+                    <span> • Status: {statusFilter}</span>
+                  )}
+
+                  <button
                     className="btn-clear-filters"
                     onClick={() => {
                       setSearchTerm('');
@@ -165,15 +182,15 @@ const StudentsPage = () => {
                 </div>
               )}
             </div>
-            
-            <StudentList 
+
+            <StudentList
               students={filteredStudents}
               onEdit={handleEditStudent}
               onDelete={handleDeleteStudent}
             />
           </>
         ) : (
-          <StudentForm 
+          <StudentForm
             student={editingStudent}
             onSubmit={handleAddStudent}
             onCancel={handleCancel}
@@ -185,8 +202,3 @@ const StudentsPage = () => {
 };
 
 export default StudentsPage;
-
-
-
-
-
