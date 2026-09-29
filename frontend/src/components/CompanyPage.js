@@ -4,7 +4,7 @@ import CompanyForm from './CompanyForm';
 import axios from 'axios';
 import '../App.css';
 
-const API_URL = 'http://localhost:5000/api/companies';
+const API_URL = 'https://campus-placement-training-tracksheet.onrender.com/api/companies';
 
 const CompaniesPage = () => {
   const [companies, setCompanies] = useState([]);
