@@ -4,7 +4,7 @@ import StudentForm from './StudentForm';
 import axios from 'axios';
 import '../App.css';
 
-const API_URL = 'http://localhost:5000/api/students';
+const API_URL = 'https://campus-placement-training-tracksheet.onrender.com/api/students';
 
 const StudentsPage = () => {
   const [students, setStudents] = useState([]);
