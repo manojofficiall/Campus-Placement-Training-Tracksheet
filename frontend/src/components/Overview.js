@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Overview.css';
 // Use public URL for image instead of import
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://campus-placement-training-tracksheet.onrender.com/api';
 
 const Overview = () => {
   const [stats, setStats] = useState({
